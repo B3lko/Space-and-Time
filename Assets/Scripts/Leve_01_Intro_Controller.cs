@@ -7,14 +7,16 @@ using TMPro;
 
 public class Leve_01_Intro_Controller : MonoBehaviour{
     [SerializeField] GameObject Player;
+    [SerializeField] GameObject cam;
     [SerializeField] GameObject Doc;
-    [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private GameObject Tuto_01;
     private List<string> dialogueLines;
     private bool didDialogueStart = false;
     private int LineIndex;
     private int LineIndexFinish;
     private float TypingTime = 0.05f;
+    private bool finish = false;
 
 
 
@@ -22,18 +24,18 @@ public class Leve_01_Intro_Controller : MonoBehaviour{
         dialogueLines = new List<string>();
         dialogueLines.Add("Finalmente...");
         dialogueLines.Add("Te estaba esperando...");
-        dialogueLines.Add("Soy Camarasa, técnico en sincronización de mecanismos de precisión...");
+        dialogueLines.Add("Me presento: soy técnico en sincronización de mecanismos de precisión...");
         dialogueLines.Add("...");
         dialogueLines.Add("Osea relojero...");
         dialogueLines.Add("Como te daras cuenta estoy rompiendo la cuarta pared...");
         dialogueLines.Add("Pero tengo un buen motivo para hacerlo...");
-        dialogueLines.Add("El creador de este videojuego se cree muy gracioso creando historias ¯\\_(ツ)_/¯");
+        dialogueLines.Add("El creador de este videojuego se cree muy gracioso creando historias...");
         dialogueLines.Add("...");
         dialogueLines.Add("Como sea...");
         dialogueLines.Add("Necesito que me ayudes a probar algunos relojes experimentales...");
         dialogueLines.Add("Para eso necesitamos darte un cuerpo dentro de este este mundo...");
         dialogueLines.Add("Que? Es lo unico que puedo conseguir...");
-        dialogueLines.Add("Bueno, ahora aprende a usarlo, nos vemos luego...");
+        dialogueLines.Add("como sea, aprende a usarlo y luego nos encontramos...");
     }
 
 
@@ -48,21 +50,10 @@ public class Leve_01_Intro_Controller : MonoBehaviour{
             StartDialogue(0);
         });
     }
-/*
-    private IEnumerator Action_02(){
-        characterNameText.text = "";
-        foreach(char ch in "Camarasa"){
-            characterNameText.text += ch;
-            yield return new WaitForSeconds(TypingTime);
-        }
-        LineIndexFinish = 8;
-        StartDialogue(3);
-    }*/
 
 
     public void StartDialogue(int LIndex){
         didDialogueStart = true;
-        dialoguePanel.SetActive(true);
         LineIndex = LIndex;
         StartCoroutine(ShowLine());
     }
@@ -80,38 +71,39 @@ public class Leve_01_Intro_Controller : MonoBehaviour{
     private void NextDialogueLine(){
         LineIndex++;
         if(LineIndex == LineIndexFinish + 1){
-            Debug.Log("SI");
             Player.SetActive(true);
             Player.GetComponent<PlayerController>().SetMove(false);
-            //didDialogueStart = false;
-            //dialoguePanel.SetActive(false);
         }
         else {
             StartCoroutine(ShowLine());
         }
-
     }
 
 
     void Update(){
-        if(didDialogueStart ){
-
-        if(Input.GetButtonDown("Fire1")){
-            /*if(!didDialogueStart){
-                StartDialogue();
+        if(didDialogueStart){
+            if(Input.GetButtonDown("Fire1") && !finish){
+                if(dialogueLines.Count == LineIndex + 1){
+                    finish = true;
+                    dialogueText.transform.DOScale(0,2);
+                    Doc.transform.DOMoveX(15,3).OnComplete(() => {
+                        Doc.SetActive(false);
+                        Tuto_01.transform.DOMoveX(0, 2).OnComplete(() => {
+                            Player.GetComponent<PlayerController>().SetMove(true);
+                            cam.GetComponent<CameraController_Intro>().enabled = true;
+                        });
+                    });
+                }
+                else if(dialogueText.text == dialogueLines[LineIndex]){
+                    NextDialogueLine();
+                }
+                else{
+                    StopAllCoroutines();
+                    dialogueText.text = dialogueLines[LineIndex];
+                }
             }
-            else*/ if(dialogueText.text == dialogueLines[LineIndex]){
-                NextDialogueLine();
-            }
-            else{
-                StopAllCoroutines();
-                dialogueText.text = dialogueLines[LineIndex];
-            }
-        }
         }
     }
-
-
 
 
 }

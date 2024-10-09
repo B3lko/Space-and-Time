@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour{
     public float speed = 5;
     private Animator animator;
-    private bool canMove = false;
+    private bool canMove = true;
     //public GameObject LevelController;
 
     void Start(){
