@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour{
     public float speed = 5;
     private Animator animator;
     private bool canMove = true;
-    //public GameObject LevelController;
 
     void Start(){
         animator = GetComponent<Animator>();
@@ -59,4 +58,6 @@ public class PlayerController : MonoBehaviour{
             gameObject.SetActive(false);
         }*/
     }
+
+
 }
